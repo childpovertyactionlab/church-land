@@ -1,0 +1,512 @@
+"bottomright",
+pal = colorFactor(map_palette, levels(vendors$HUB), na.color=NULL, ordered = TRUE),
+values = ~HUB,
+title = "HUB Eligibility",
+opacity = 0.7
+) %>%
+addLayersControl(
+overlayGroups = levels(vendors$HUB),
+position = "bottomleft",
+options = layersControlOptions(collapsed = FALSE)
+) %>%
+setMaxBounds(expanded_bounds[1], expanded_bounds[2], expanded_bounds[3], expanded_bounds[4])
+m
+m <- leaflet(data = vendors,
+height = "90vh",
+width = "100%",
+elementId = "vendor-map",
+options = leafletOptions(
+zoomSnap = 0.5,
+zoomDelta = 0.5,
+minZoom = 9.5
+)
+) %>%
+addTiles(urlTemplate = cpaltemplates::cpal_mapbox, attribution = cpaltemplates::cpal_leaflet) %>%
+addPolygons(
+data = dallas_co,
+fillColor = "#333333",
+fillOpacity = 0.03, weight = 2, color = "#333333",
+smoothFactor = 1,
+options = pathOptions(clickable = F, interactive = F)
+)
+for(i in seq_along(levels(vendors$HUB))) {
+hub <- levels(vendors$HUB)[i]
+m <- m %>%
+addCircleMarkers(
+data = vendors %>% filter(HUB == hub),
+group = hub,
+radius = 5,
+stroke = FALSE,
+color = map_palette[i],
+fillOpacity = 0.7,
+clusterOptions = markerClusterOptions(
+maxClusterRadius = 60,
+disableClusteringAtZoom = 12
+),
+label = ~`Company Name`,
+popup = ~paste0(
+"<b>", `Company Name`, "</b><br/>",
+"<i>", HUB_desc, "</i><br/>",
+address, "<br/>",
+Phone, "<br/>",
+Email
+)
+)
+}
+m <- m %>%
+addLegend(
+"bottomright",
+pal = colorFactor(map_palette, levels(vendors$HUB), na.color=NULL, ordered = TRUE),
+values = ~HUB,
+title = "HUB Eligibility",
+opacity = 0.7
+) %>%
+addLayersControl(
+overlayGroups = levels(vendors$HUB),
+position = "bottomleft",
+options = layersControlOptions(collapsed = FALSE)
+) %>%
+setMaxBounds(expanded_bounds[1], expanded_bounds[2], expanded_bounds[3], expanded_bounds[4])
+m
+m <- leaflet(data = vendors,
+height = "90vh",
+width = "100%",
+elementId = "vendor-map",
+options = leafletOptions(
+zoomSnap = 0.5,
+zoomDelta = 0.5,
+minZoom = 9.5,
+wheelPxPerZoomLevel = 90
+)
+) %>%
+addTiles(urlTemplate = cpaltemplates::cpal_mapbox, attribution = cpaltemplates::cpal_leaflet) %>%
+addPolygons(
+data = dallas_co,
+fillColor = "#333333",
+fillOpacity = 0.03, weight = 2, color = "#333333",
+smoothFactor = 1,
+options = pathOptions(clickable = F, interactive = F)
+)
+for(i in seq_along(levels(vendors$HUB))) {
+hub <- levels(vendors$HUB)[i]
+m <- m %>%
+addCircleMarkers(
+data = vendors %>% filter(HUB == hub),
+group = hub,
+radius = 5,
+stroke = FALSE,
+color = map_palette[i],
+fillOpacity = 0.7,
+clusterOptions = markerClusterOptions(
+maxClusterRadius = 60,
+disableClusteringAtZoom = 12
+),
+label = ~`Company Name`,
+popup = ~paste0(
+"<b>", `Company Name`, "</b><br/>",
+"<i>", HUB_desc, "</i><br/>",
+address, "<br/>",
+Phone, "<br/>",
+Email
+)
+)
+}
+m <- m %>%
+addLegend(
+"bottomright",
+pal = colorFactor(map_palette, levels(vendors$HUB), na.color=NULL, ordered = TRUE),
+values = ~HUB,
+title = "HUB Eligibility",
+opacity = 0.7
+) %>%
+addLayersControl(
+overlayGroups = levels(vendors$HUB),
+position = "bottomleft",
+options = layersControlOptions(collapsed = FALSE)
+) %>%
+setMaxBounds(expanded_bounds[1], expanded_bounds[2], expanded_bounds[3], expanded_bounds[4])
+m
+m <- leaflet(data = vendors,
+height = "90vh",
+width = "100%",
+elementId = "vendor-map",
+options = leafletOptions(
+zoomSnap = 0.5,
+zoomDelta = 0.5,
+minZoom = 9.5,
+wheelPxPerZoomLevel = 90,
+zoom = 10
+)
+) %>%
+addTiles(urlTemplate = cpaltemplates::cpal_mapbox, attribution = cpaltemplates::cpal_leaflet) %>%
+addPolygons(
+data = dallas_co,
+fillColor = "#333333",
+fillOpacity = 0.03, weight = 2, color = "#333333",
+smoothFactor = 1,
+options = pathOptions(clickable = F, interactive = F)
+)
+m <- leaflet(data = vendors,
+height = "90vh",
+width = "100%",
+elementId = "vendor-map",
+options = leafletOptions(
+zoomSnap = 0.5,
+zoomDelta = 0.5,
+minZoom = 9.5,
+wheelPxPerZoomLevel = 90,
+zoom = 10
+)
+) %>%
+addTiles(urlTemplate = cpaltemplates::cpal_mapbox, attribution = cpaltemplates::cpal_leaflet) %>%
+addPolygons(
+data = dallas_co,
+fillColor = "#333333",
+fillOpacity = 0.03, weight = 2, color = "#333333",
+smoothFactor = 1,
+options = pathOptions(clickable = F, interactive = F)
+)
+for(i in seq_along(levels(vendors$HUB))) {
+hub <- levels(vendors$HUB)[i]
+m <- m %>%
+addCircleMarkers(
+data = vendors %>% filter(HUB == hub),
+group = hub,
+radius = 5,
+stroke = FALSE,
+color = map_palette[i],
+fillOpacity = 0.7,
+clusterOptions = markerClusterOptions(
+maxClusterRadius = 60,
+disableClusteringAtZoom = 12
+),
+label = ~`Company Name`,
+popup = ~paste0(
+"<b>", `Company Name`, "</b><br/>",
+"<i>", HUB_desc, "</i><br/>",
+address, "<br/>",
+Phone, "<br/>",
+Email
+)
+)
+}
+m <- m %>%
+addLegend(
+"topright",
+pal = colorFactor(map_palette, levels(vendors$HUB), na.color=NULL, ordered = TRUE),
+values = ~HUB,
+title = "HUB Eligibility",
+opacity = 0.7
+) %>%
+addLayersControl(
+overlayGroups = levels(vendors$HUB),
+position = "topleft",
+options = layersControlOptions(collapsed = FALSE)
+) %>%
+setMaxBounds(expanded_bounds[1], expanded_bounds[2], expanded_bounds[3], expanded_bounds[4])
+m
+m <- leaflet(data = vendors,
+height = "90vh",
+width = "100%",
+elementId = "vendor-map",
+options = leafletOptions(
+zoomSnap = 0.5,
+zoomDelta = 0.5,
+minZoom = 9.5,
+wheelPxPerZoomLevel = 90
+)
+) %>%
+setView(zoom = 9.5) %>%
+addTiles(urlTemplate = cpaltemplates::cpal_mapbox, attribution = cpaltemplates::cpal_leaflet) %>%
+addPolygons(
+data = dallas_co,
+fillColor = "#333333",
+fillOpacity = 0.03, weight = 2, color = "#333333",
+smoothFactor = 1,
+options = pathOptions(clickable = F, interactive = F)
+)
+m <- leaflet(data = vendors,
+height = "90vh",
+width = "100%",
+elementId = "vendor-map",
+options = leafletOptions(
+zoomSnap = 0.5,
+zoomDelta = 0.5,
+minZoom = 9.5,
+wheelPxPerZoomLevel = 90
+)
+) %>%
+mapOptions(zoomToLimits = "first") %>%
+addTiles(urlTemplate = cpaltemplates::cpal_mapbox, attribution = cpaltemplates::cpal_leaflet) %>%
+addPolygons(
+data = dallas_co,
+fillColor = "#333333",
+fillOpacity = 0.03, weight = 2, color = "#333333",
+smoothFactor = 1,
+options = pathOptions(clickable = F, interactive = F)
+)
+for(i in seq_along(levels(vendors$HUB))) {
+hub <- levels(vendors$HUB)[i]
+m <- m %>%
+addCircleMarkers(
+data = vendors %>% filter(HUB == hub),
+group = hub,
+radius = 5,
+stroke = FALSE,
+color = map_palette[i],
+fillOpacity = 0.7,
+clusterOptions = markerClusterOptions(
+maxClusterRadius = 60,
+disableClusteringAtZoom = 12
+),
+label = ~`Company Name`,
+popup = ~paste0(
+"<b>", `Company Name`, "</b><br/>",
+"<i>", HUB_desc, "</i><br/>",
+address, "<br/>",
+Phone, "<br/>",
+Email
+)
+)
+}
+m <- m %>%
+addLegend(
+"topright",
+pal = colorFactor(map_palette, levels(vendors$HUB), na.color=NULL, ordered = TRUE),
+values = ~HUB,
+title = "HUB Eligibility",
+opacity = 0.7
+) %>%
+addLayersControl(
+overlayGroups = levels(vendors$HUB),
+position = "topleft",
+options = layersControlOptions(collapsed = FALSE)
+) %>%
+setMaxBounds(expanded_bounds[1], expanded_bounds[2], expanded_bounds[3], expanded_bounds[4])
+m
+vendors <- read_csv("data/geocoded_vendors.csv") %>%
+filter(`HUB Status` == "Yes") %>%
+mutate(
+jitter_cond = duplicated(lat) | duplicated(lat, fromLast = TRUE) |
+duplicated(long) | duplicated(long, fromLast = TRUE),
+long = ifelse(jitter_cond, jitter(long, amount = 0.0001), long),
+lat = ifelse(jitter_cond, jitter(lat, amount = 0.0001), lat)
+HUB = factor(
+```{r setup, output = F, echo = F}
+library(tidycensus)
+library(sf)
+library(tidyverse)
+library(leaflet)
+library(tigris)
+# Load Dallas County boundaries
+dallas_co <- tigris::counties(state = "TX", class = "sf") %>%
+filter(NAME == "Dallas")
+# Load properties data from GeoJSON
+properties <- st_read("fbown_properties.geojson", quiet = TRUE) %>%
+filter(fbown == TRUE) %>%
+st_set_crs(st_crs(dallas_co)) %>%
+st_join(dallas_co, st_within) %>%
+filter(!is.na(GIS_PARCEL_ID))
+```{r setup, output = F, echo = F}
+library(tidycensus)
+library(sf)
+library(tidyverse)
+library(leaflet)
+library(tigris)
+# Load Dallas County boundaries
+dallas_co <- tigris::counties(state = "TX", class = "sf") %>%
+filter(NAME == "Dallas")
+# Load properties data from GeoJSON
+properties <- st_read("data/fbown_properties.geojson", quiet = TRUE) %>%
+st_set_crs(st_crs(dallas_co)) %>%
+st_join(dallas_co, st_within) %>%
+filter(!is.na(ACCOUNT_NUM))
+# Convert 'VacType' to a more readable format and store it in 'PropType'
+properties <- properties %>%
+mutate(
+PropType = factor(
+case_when(
+VacType == "RES" ~ "Residential",
+VacType == "COM" ~ "Commercial",
+VacType == "IND" ~ "Industrial",
+VacType == "RUR" ~ "Rural",
+TRUE ~ NA_character_
+),
+levels = c("Residential", "Commercial", "Industrial", "Rural")
+)
+)
+# Ensure 'properties' is properly defined before calculating counts
+if (nrow(properties) > 0 && "GIS_PARCEL_ID" %in% names(properties)) {
+count_properties <- scales::comma(n_distinct(properties$ACCOUNT_NUM))
+count_residential <- scales::comma(nrow(properties %>% filter(PropType == "Residential")))
+count_commercial <- scales::comma(nrow(properties %>% filter(PropType == "Commercial")))
+count_industrial <- scales::comma(nrow(properties %>% filter(PropType == "Industrial")))
+count_rural <- scales::comma(nrow(properties %>% filter(PropType == "Rural")))
+} else {
+count_properties <- "N/A"
+count_residential <- "N/A"
+count_commercial <- "N/A"
+count_industrial <- "N/A"
+count_rural <- "N/A"
+warning("The 'properties' dataframe is empty or missing 'ACCOUNT_NUM'.")
+}
+library(tidycensus)
+library(sf)
+library(tidyverse)
+library(leaflet)
+library(tigris)
+# Load Dallas County boundaries
+dallas_co <- tigris::counties(state = "TX", class = "sf") %>%
+filter(NAME == "Dallas") %>%
+st_transform(crs = 4326)
+# Load properties data from GeoJSON
+properties <- st_read("data/fbown_properties.geojson", quiet = TRUE) %>%
+st_transform(crs = 4326) %>%
+st_join(dallas_co, st_within) %>%
+filter(!is.na(ACCOUNT_NUM))
+# Convert 'VacType' to a more readable format and store it in 'PropType'
+properties <- properties %>%
+mutate(
+PropType = factor(
+case_when(
+VacType == "RES" ~ "Residential",
+VacType == "COM" ~ "Commercial",
+VacType == "IND" ~ "Industrial",
+VacType == "RUR" ~ "Rural",
+TRUE ~ NA_character_
+),
+levels = c("Residential", "Commercial", "Industrial", "Rural")
+)
+)
+# Ensure 'properties' is properly defined before calculating counts
+if (nrow(properties) > 0 && "GIS_PARCEL_ID" %in% names(properties)) {
+count_properties <- scales::comma(n_distinct(properties$ACCOUNT_NUM))
+count_residential <- scales::comma(nrow(properties %>% filter(PropType == "Residential")))
+count_commercial <- scales::comma(nrow(properties %>% filter(PropType == "Commercial")))
+count_industrial <- scales::comma(nrow(properties %>% filter(PropType == "Industrial")))
+count_rural <- scales::comma(nrow(properties %>% filter(PropType == "Rural")))
+} else {
+count_properties <- "N/A"
+count_residential <- "N/A"
+count_commercial <- "N/A"
+count_industrial <- "N/A"
+count_rural <- "N/A"
+warning("The 'properties' dataframe is empty or missing 'ACCOUNT_NUM'.")
+}
+# Define bounds for the map view
+bounds <- st_bbox(dallas_co)
+expanded_bounds <- as.vector(c(
+xmin = bounds["xmin"] - 0.25,
+ymin = bounds["ymin"] - 0.25,
+xmax = bounds["xmax"] + 0.25,
+ymax = bounds["ymax"] + 0.25
+))
+# Define color palette for the map
+map_palette <- c("#008097", "#ED683F", "#EACA2D", "#5C2B1C", "#ED018C", "#185411")
+gc()
+library(tidycensus)
+library(sf)
+library(tidyverse)
+library(leaflet)
+library(tigris)
+# Load Dallas County boundaries
+dallas_co <- tigris::counties(state = "TX", class = "sf") %>%
+filter(NAME == "Dallas")
+# Load properties data from GeoJSON
+properties <- st_read("data/fbown_properties.geojson", quiet = TRUE) %>%
+st_transform(crs = 4326) %>%
+st_join(dallas_co, st_within) %>%
+filter(!is.na(ACCOUNT_NUM))
+library(tidycensus)
+library(sf)
+library(tidyverse)
+library(leaflet)
+library(tigris)
+# Load Dallas County boundaries and transform CRS
+dallas_co <- tigris::counties(state = "TX", class = "sf") %>%
+filter(NAME == "Dallas") %>%
+st_transform(crs = 4326)
+# Confirm CRS of Dallas County boundaries
+print(st_crs(dallas_co))
+# Load properties data from GeoJSON and transform CRS
+properties <- st_read("data/fbown_properties.geojson", quiet = TRUE) %>%
+st_transform(crs = 4326)
+# Confirm CRS of properties
+print(st_crs(properties))
+# Ensure both have the same CRS before joining
+if (st_crs(properties) == st_crs(dallas_co)) {
+properties <- properties %>%
+st_join(dallas_co, st_within) %>%
+filter(!is.na(ACCOUNT_NUM))
+} else {
+stop("CRS of properties and Dallas County boundaries do not match.")
+}
+# Convert 'VacType' to a more readable format and store it in 'PropType'
+properties <- properties %>%
+mutate(
+PropType = factor(
+case_when(
+VacType == "RES" ~ "Residential",
+VacType == "COM" ~ "Commercial",
+VacType == "IND" ~ "Industrial",
+VacType == "RUR" ~ "Rural",
+TRUE ~ NA_character_
+),
+levels = c("Residential", "Commercial", "Industrial", "Rural")
+)
+)
+# Ensure 'properties' is properly defined before calculating counts
+if (nrow(properties) > 0 && "ACCOUNT_NUM" %in% names(properties)) {
+count_properties <- scales::comma(n_distinct(properties$ACCOUNT_NUM))
+count_residential <- scales::comma(nrow(properties %>% filter(PropType == "Residential")))
+count_commercial <- scales::comma(nrow(properties %>% filter(PropType == "Commercial")))
+count_industrial <- scales::comma(nrow(properties %>% filter(PropType == "Industrial")))
+count_rural <- scales::comma(nrow(properties %>% filter(PropType == "Rural")))
+} else {
+count_properties <- "N/A"
+count_residential <- "N/A"
+count_commercial <- "N/A"
+count_industrial <- "N/A"
+count_rural <- "N/A"
+warning("The 'properties' dataframe is empty or missing 'ACCOUNT_NUM'.")
+}
+# Define bounds for the map view
+bounds <- st_bbox(dallas_co)
+expanded_bounds <- as.vector(c(
+xmin = bounds["xmin"] - 0.25,
+ymin = bounds["ymin"] - 0.25,
+xmax = bounds["xmax"] + 0.25,
+ymax = bounds["ymax"] + 0.25
+))
+# Define color palette for the map
+map_palette <- c("#008097", "#ED683F", "#EACA2D", "#5C2B1C", "#ED018C", "#185411")
+library(tidycensus)
+library(sf)
+library(tidyverse)
+library(leaflet)
+library(tigris)
+# Load Dallas County boundaries and transform CRS
+dallas_co <- tigris::counties(state = "TX", class = "sf") %>%
+filter(NAME == "Dallas") %>%
+st_transform(crs = 4326)
+gc()
+gc()
+devtools::install_github("childpovertyactionlab/cpaltemplates")
+warnings()
+gc()
+library(tidycensus)
+library(sf)
+library(tidyverse)
+gc()
+gc()
+# Load Dallas County boundaries and transform CRS
+dallas_co <- tigris::counties(state = "TX", class = "sf") %>%
+filter(NAME == "Dallas") %>%
+st_transform(crs = 4326)
+library(tidycensus)
+library(sf)
+library(tidyverse)
+gc()
+library(tidycensus)
+library(sf)
+library(tidyverse)

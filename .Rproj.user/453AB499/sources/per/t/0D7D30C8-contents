@@ -1,0 +1,247 @@
+---
+pagetitle: "Church-Owned Vacant Properties"
+format: html
+---
+
+```{r setup, include=FALSE}
+library(tidycensus)
+library(dplyr)
+library(sf)
+library(tidyverse)
+library(leaflet)
+library(tigris)
+library(DT)
+library(leaflet.extras)
+library(cpaltemplates)
+library(cpaltools)
+
+# Load Dallas County boundaries and transform CRS
+dallas_co <- st_read("data/dallas_co.geojson", quiet = TRUE)%>%
+  st_transform(crs = 4326)
+
+# Load ZCTA boundaries from a shapefile and transform CRS
+zctas <- st_read("data/ZCTA_DallasCo.geojson", quiet = TRUE) %>%
+  st_transform(crs = 4326) %>%
+  filter(!is.na(GEOID10))
+
+# Load properties data from GeoJSON and transform CRS
+properties <- st_read("data/fbown_properties.geojson", quiet = TRUE) %>%
+  st_transform(crs = 4326) %>%
+  st_join(zctas, st_within) %>%
+  filter(!is.na(ACCOUNT_NUM))
+
+# Convert 'VacType' to a more readable format and store it in 'PropType'
+# and create a full property address
+properties <- properties %>%
+  mutate(
+    PropType = factor(
+      case_when(
+        VacType == "RES" ~ "Residential",
+        VacType == "COM" ~ "Commercial",
+        VacType == "IND" ~ "Industrial",
+        VacType == "RUR" ~ "Rural",
+        TRUE ~ NA_character_
+      ),
+      levels = c("Residential", "Commercial", "Industrial", "Rural")
+    ),
+    full_prop_address = paste(STREET_NUM, FULL_STREET_NAME, PROPERTY_CITY, "TX", PROPERTY_ZIPCODE, sep = " ")
+  )
+
+# Calculate the property counts
+count_properties <- scales::comma(n_distinct(properties$GIS_PARCEL_ID))
+count_residential <- scales::comma(nrow(properties %>% filter(PropType == "Residential")))
+count_commercial <- scales::comma(nrow(properties %>% filter(PropType == "Commercial")))
+count_industrial <- scales::comma(nrow(properties %>% filter(PropType == "Industrial")))
+count_rural <- scales::comma(nrow(properties %>% filter(PropType == "Rural")))
+
+
+# Define color palette for the map
+map_palette <- c("Residential" = "#008097", "Commercial" = "#ED683F", "Industrial" = "#EACA2D", "Rural" = "#5C2B1C")
+
+# Create a summary table by ZCTA
+zcta_summary <- properties %>%
+  group_by(ZCTA = ZCTA5CE10) %>%
+  summarise(
+    Total = n(),
+    Residential = sum(PropType == "Residential", na.rm = TRUE),
+    Commercial = sum(PropType == "Commercial", na.rm = TRUE),
+    Industrial = sum(PropType == "Industrial", na.rm = TRUE),
+    Rural = sum(PropType == "Rural", na.rm = TRUE)
+  ) %>%
+  mutate(Total = Residential + Commercial + Industrial + Rural) %>%
+  arrange(desc(Total)) %>%
+  slice_head(n = 5) # Select top 5 ZCTAs
+
+# Save this table for rendering in the right-side column
+top_zctas_table <- DT::datatable(
+  zcta_summary,
+  rownames = FALSE,
+  colnames = c("ZCTA", "Total Properties", "Residential", "Commercial", "Industrial", "Rural", "Total")
+)
+
+
+
+
+```
+
+::: column-screen-inset
+
+```{=html}
+<div class="mainboxbox">
+<div class="mainbox">
+```
+
+:::: {.card}
+
+```{=html}
+<div class="cardbox">
+
+<div class="left-card-col dark-col">
+```
+
+```{=html}
+  <div class="card-side" style="width: 94%;">
+```
+
+# There are `r count_properties` Church-Owned vacant parcels in Dallas County
+
+```{=html}
+    <div class="subtext">
+      &#8212; Dallas County Appraisal District (DCAD)
+    </div>
+  </div>
+</div>
+```
+
+```{=html}
+<div class="right-card-col">
+
+  <div style="width: 3%">
+  </div>
+
+  <div class="card-side">
+    
+    <h4>
+      <div class="rounded-outline"><b>`r count_residential`</b></div> church-owned vacant parcels listed as <span style="color: #008097;">Residential</span>
+    </h4>
+    <h4>
+      <div class="rounded-outline"><b>`r count_commercial`</b></div> church-owned vacant parcels listed as <span style="color: #ED683F;">Commercial</span>
+    </h4>
+    <h4>
+      <div class="rounded-outline"><b>`r count_industrial`</b></div> church-owned vacant parcels listed as <span style="color: #bd9e0b;">Industrial</span>
+    </h4>
+    <h4>
+      <div class="rounded-outline"><b>`r count_rural`</b></div> church-owned vacant parcels listed as <span style="color: #5C2B1C;">Rural</span>
+    </h4>
+
+  </div>
+</div>
+
+</div>
+
+```
+
+::::
+
+```{=html}
+
+<div class="mapscroll-container">
+  <a href="javascript:void(0);" class="scroll-link" onclick="scrollToMap()">
+      Click for map <i class="bi bi-chevron-down"></i>
+  </a>
+</div>
+
+```
+
+```{r map}
+
+# Define the color palette, ensuring the order matches the factor levels of PropType
+map_palette <- c(
+  "Residential" = "#008097",
+  "Commercial" = "#ED683F",
+  "Industrial" = "#EACA2D",
+  "Rural" = "#5C2B1C"
+)
+
+# Order the color palette to match the factor levels
+ordered_palette <- setNames(map_palette[levels(properties$PropType)], levels(properties$PropType))
+color_mapping <- colorFactor(ordered_palette, levels(properties$PropType))
+
+# Create the map
+# Create the map with the specified base map
+m <- leaflet(data = properties, height = "50vh", width = "100%") %>%
+  addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color, attribution = cpaltemplates::cpal_leaflet) %>%
+  addPolygons(
+    data = dallas_co,
+    fillColor = "#333333",
+    fillOpacity = 0.2,
+    weight = 1,
+    color = "#333333",
+    options = pathOptions(clickable = FALSE, interactive = FALSE)
+  )
+
+
+# Add markers for each property type with the correct colors from the ordered palette
+for (type in levels(properties$PropType)) {
+  filtered_properties <- properties[properties$PropType == type, ]
+  m <- m %>%
+    addCircleMarkers(
+      data = filtered_properties,
+      group = type,
+      radius = 5,
+      stroke = FALSE,
+      fillColor = ~color_mapping(PropType),
+      fillOpacity = 0.7,
+      clusterOptions = markerClusterOptions(),
+      label = ~as.character(OWNER_NAME1),
+      popup = ~paste(OWNER_NAME1, BIZ_NAME, PropType, full_prop_address, sep = "<br/>")
+    )
+}
+
+# Add layers control
+m <- m %>%
+  addLayersControl(
+    overlayGroups = levels(properties$PropType),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+# Add a legend that matches the colors used for markers
+m <- m %>%
+  addLegend(
+    position = "bottomright",
+    pal = colorFactor(ordered_palette, domain = levels(properties$PropType)),
+    values = levels(properties$PropType),
+    title = "Property Type",
+    opacity = 0.7
+  )
+
+m
+
+```
+
+```{=html}
+
+<script>
+function scrollToMap() {
+    const element = document.getElementById('property-map');
+    const headerOffset = 70; // height of your fixed header
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+    });
+}
+</script>
+
+```
+
+
+```{=html}
+</div>
+</div>
+
+```
+
+:::
